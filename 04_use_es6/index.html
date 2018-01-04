@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://fb.me/react-0.14.3.js"></script>
+    <script src="https://fb.me/react-dom-0.14.3.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.js"></script>
+</head>
+<body>
+    <div id="react-container"></div>
+    <script type="text/babel">
+        class MyComponent extends React.Component {
+            render(){
+              return <div>
+                <h1>React</h1>
+                <p>First react Component</p>
+              </div>
+            }
+        }
+
+
+        ReactDOM.render(<MyComponent/>,
+                document.getElementById('react-container'));
+    </script>
+</body>
+</html>
