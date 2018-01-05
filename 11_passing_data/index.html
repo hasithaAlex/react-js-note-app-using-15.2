@@ -8,33 +8,36 @@
         <title>Building the Note Board</title>
     </head>
     <body>
-        <div id='react-container-board'></div>
         <div id='react-container'></div>
         <script type="text/babel">
-
-
-
-
           var Note = React.createClass({
             getInitialState() {
              return {editing: false};
+            },
+            componentWillMount() {
+              this.style = {
+                right: this.randomBetween(0, window.innerWidth - 150, 'px'),
+                top: this.randomBetween(0, window.innerHeight - 150, 'px')
+              }
+            },
+            randomBetween(x, y, s) {
+              return (x= Math.ceil(Math.random() * (y-x))) + s
             },
             edit() {
               this.setState({editing: true});
             },
             save() {
-              var val = this.refs.newText.value
-              alert(val);
-              this.setState({editing: false});
+              this.props.onChange(this.refs.newText.value, this.props.id)
+              this.setState({editing: false})
             },
             remove() {
-              alert("Remove");
+              this.props.onRemove(this.props.id)
             },
             renderForm() {
                 return (
                   <div className="note">
                     <textarea ref="newText"></textarea>
-                    <button onClick={this.save}>Save</button>
+                    <button className="osx primary" onClick={this.save}>Save</button>
                   </div>
                 )
             },
@@ -43,8 +46,8 @@
                 <div className="note">
                   <p>{this.props.children}</p>
                   <span>
-                    <button onClick={this.edit}>EDIT</button>
-                    <button onClick={this.remove}>X</button>
+                    <a id="needhelp" className="osx" onClick={this.edit}>EDIT</a>
+                    <a id="help"  className="osx round" onClick={this.remove}>X</a>
                   </span>
                 </div>
               )
@@ -53,12 +56,6 @@
               return (this.state.editing) ? this.renderForm() : this.renderDisplay()
             }
           })
-        //  ReactDOM.render(<div>
-        //          <Note>Hello world</Note>
-        //          </div>
-        //          ,document.getElementById('react-container'))
-
-
 
 
 
@@ -78,20 +75,48 @@
             },
             getInitialState() {
               return {
-                notes: [
-                  {id:1, note:'Call Amma'},
-                  {id:2, note:'Go to gym'},
-                  {id:3, note:'Text her'},
-                  {id:4, note:'eat dinner'}
-                ]
+                notes: []
               }
+            },
+            nextId() {
+              this.uniqueId = this.uniqueId || 0
+              return this.uniqueId++
+            },
+            add(text) {
+              var notes = [
+                ...this.state.notes,
+                {
+                  id: this.nextId(),
+                  note: text
+                }
+              ]
+              this.setState({notes})
+            },
+            update(newText, id){
+              var notes = this.state.notes.map(
+                note => (note.id !== id) ? note : { ...note, note: newText }
+              )
+              this.setState({notes})
+            },
+            remove(id){
+              var notes =this.state.notes.filter(note => note.id != id)
+              this.setState({notes})
+            },
+            eachNote(note) {
+              return (
+                <Note key={note.id}
+                      id={note.id}
+                      onChange={this.update}
+                      onRemove={this.remove}>
+                      {note.note}
+                </Note>
+              )
             },
             render() {
               return (
                 <div className="board">
-                  {this.state.notes.map((note, i) => {
-                    return <Note key={i}>{note.note}</Note>
-                  })}
+                  {this.state.notes.map(this.eachNote)}
+                  <button onClick={() => this.add('New Note')} className="osx round">+</button>
                 </div>
               )
             }
