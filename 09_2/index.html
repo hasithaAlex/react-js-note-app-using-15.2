@@ -12,7 +12,7 @@
         <script type="text/babel">
           var Note = React.createClass({
             getInitialState() {
-             return {editing: true};
+              return {editing: true};
             },
             edit() {
               this.setState({editing: true});
@@ -45,12 +45,50 @@
               )
             },
             render(){
-              return (this.state.editing) ? this.renderForm() : this.renderDisplay()
+              return (this.state.editing) ? this.renderForm() 
+                                          : this.renderDisplay()
             }
           })
 
+
+
+
+          var Board = React.createClass({
+            propTypes:  {
+              count: function (props, propName) {
+                if(typeof props[propName] !=="number")
+                {
+                  return new Error("the count must be a number")
+                }
+
+                if(props[propName] > 100)
+                {
+                  return new Error("Too mush notes")
+                }
+              }
+            },               
+            render() {
+              return (
+                <div className='board'>
+                  <lable>{this.props.children}</lable>
+                  > {this.props.count}
+                </div>
+              )
+            }
+          })
+
+
+
+
+
+
+
+
+
           ReactDOM.render(<div>
-                  <Note>Hello world</Note>
+                    <Board count="10">string number with propTypes Error</Board>
+                    <Board count={1000}>Large number with propTypes Error</Board>
+                    <Board count={10}>Hello world</Board>
                   </div>
                   ,document.getElementById('react-container'))
 

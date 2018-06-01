@@ -12,7 +12,13 @@
     <div id="react-container"></div>
     <div id="react-list-container"></div>
     <script>
-        ReactDOM.render(React.createElement('div',null,'hello'),document.getElementById('react-container'));
+        ReactDOM.render(
+            React.createElement(
+                'div',
+                null,
+                'hello'),
+            document.getElementById('react-container')
+        );
 
         ReactDOM.render(React.createElement('div',null,
             React.createElement('div',null,'item 1'),
